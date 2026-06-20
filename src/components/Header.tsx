@@ -23,7 +23,7 @@ const MENU_LINK_MUTED = "#9CC4B5"
 
 const mainNavLinks = [
   { label: "Home", href: "/", current: true },
-  { label: "Shop", href: "/pharmacy", hasDropdown: true },
+  { label: "Shop", href: "/pharmacy", hasDropdown: false },
   { label: "Learn", href: "/learn" },
   { label: "Doctors", href: "/" },
 ]
@@ -59,7 +59,7 @@ export default function Header() {
     <header className="w-full">
       {/* Top utility bar */}
       <div
-        className={`hidden md:flex justify-end items-center w-full h-[42px] px-[30px] transition-all duration-500 ease-in-out ${isScrolled ? "opacity-0 h-0 overflow-hidden" : "opacity-100"
+        className={`hidden md:flex justify-end items-center w-full px-[30px] transition-all duration-500 ease-in-out ${isScrolled ? "h-0 opacity-0 overflow-hidden" : "h-[42px] opacity-100"
           }`}
         style={{ backgroundColor: PRIMARY }}
       >
@@ -83,7 +83,7 @@ export default function Header() {
 
       {/* Main desktop header */}
       <div
-        className={`hidden md:flex flex-col gap-5 items-center w-full bg-[#E7E7E7] py-2 px-[1%] transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0 z-50 shadow-md" : "relative"
+        className={`hidden md:flex flex-col gap-5 items-center w-full bg-[#E7E7E7] py-2 px-[1%] transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0 z-50 shadow-md" : "sticky top-0 z-50"
           }`}
       >
         <div className="flex w-full items-center justify-between">

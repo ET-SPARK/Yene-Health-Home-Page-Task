@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Heart, ShoppingCart, Eye, ChevronLeft, ChevronRight } from "lucide-react"
 
 const PRIMARY = "#E17A6E"
@@ -143,6 +143,15 @@ export default function Hero() {
     const nextBanner = () => setActiveBanner((i) => (i + 1) % banners.length)
     const prevBanner = () => setActiveBanner((i) => (i - 1 + banners.length) % banners.length)
 
+    // Auto-cycle banners every 1 second
+    useEffect(() => {
+        const interval = setInterval(() => {
+            nextBanner()
+        }, 5000) // 1 second
+
+        return () => clearInterval(interval)
+    }, [])
+
     const current = banners[activeBanner]
 
     return (
@@ -150,40 +159,24 @@ export default function Hero() {
             {/* Left: banner carousel + quick links */}
             <div className="md:col-span-5 flex flex-col gap-4">
                 <div
-                    className="relative w-full rounded-2xl shadow overflow-hidden h-[420px] flex flex-col justify-between p-8 bg-cover bg-center"
+                    className="relative w-full rounded-2xl shadow overflow-hidden h-[80vh] flex flex-col justify-between p-8 bg-cover bg-center"
                     style={{
                         backgroundImage: `url(${current.image})`,
                     }}
                 >
-                    {/* Carousel arrows */}
-                    <button
-                        type="button"
-                        onClick={prevBanner}
-                        aria-label="Previous banner"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center shadow"
-                    >
-                        <ChevronLeft size={18} style={{ color: PRIMARY }} />
-                    </button>
-                    <button
-                        type="button"
-                        onClick={nextBanner}
-                        aria-label="Next banner"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center shadow"
-                    >
-                        <ChevronRight size={18} style={{ color: PRIMARY }} />
-                    </button>
+
 
                     {/* Dots */}
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
                         {banners.map((b, i) => (
                             <button
                                 key={b.title}
                                 type="button"
                                 aria-label={`Go to ${b.title}`}
                                 onClick={() => setActiveBanner(i)}
-                                className="h-1.5 rounded-full transition-all"
+                                className="h-[16px] rounded-full transition-all duration-300"
                                 style={{
-                                    width: i === activeBanner ? 18 : 6,
+                                    width: i === activeBanner ? 48 : 24,
                                     backgroundColor: i === activeBanner ? SECONDARY : "#ffffffaa",
                                 }}
                             />
@@ -199,12 +192,34 @@ export default function Hero() {
                             type="button"
                             onClick={() => setActiveBanner(i)}
                             title={b.title}
-                            className="rounded-xl px-2 py-2 text-xs font-semibold border truncate transition-colors"
+                            className="rounded-xl px-2 py-2 text-xs font-semibold border truncate transition-all duration-200"
                             style={
                                 i === activeBanner
-                                    ? { backgroundColor: PRIMARY, color: "#fff", borderColor: PRIMARY }
-                                    : { color: SECONDARY, borderColor: SECONDARY, backgroundColor: "transparent" }
+                                    ? {
+                                        backgroundColor: SECONDARY,
+                                        color: "#fff",
+                                        borderColor: SECONDARY,
+                                    }
+                                    : {
+                                        backgroundColor: "transparent",
+                                        color: SECONDARY,
+                                        borderColor: SECONDARY,
+                                    }
                             }
+                            onMouseEnter={(e) => {
+                                if (i !== activeBanner) {
+                                    e.currentTarget.style.backgroundColor = PRIMARY
+                                    e.currentTarget.style.borderColor = SECONDARY
+                                    e.currentTarget.style.color = "#fff"
+                                }
+                            }}
+                            onMouseLeave={(e) => {
+                                if (i !== activeBanner) {
+                                    e.currentTarget.style.backgroundColor = "transparent"
+                                    e.currentTarget.style.borderColor = SECONDARY
+                                    e.currentTarget.style.color = SECONDARY
+                                }
+                            }}
                         >
                             {b.title}
                         </button>
