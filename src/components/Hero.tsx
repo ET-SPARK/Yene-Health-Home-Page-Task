@@ -152,6 +152,28 @@ export default function Hero() {
         return () => clearInterval(interval)
     }, [])
 
+    const scrollProducts = (direction: 'left' | 'right') => {
+        const container = document.getElementById('products-scroll')
+        if (container) {
+            const scrollAmount = 200
+            container.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth'
+            })
+        }
+    }
+
+    const scrollArticles = (direction: 'left' | 'right') => {
+        const container = document.getElementById('articles-scroll')
+        if (container) {
+            const scrollAmount = 280
+            container.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth'
+            })
+        }
+    }
+
     const current = banners[activeBanner]
 
     return (
@@ -230,9 +252,44 @@ export default function Hero() {
             {/* Right: featured products + featured learning */}
             <div className="md:col-span-7 flex flex-col gap-4">
                 {/* Featured Products */}
-                <div className="bg-white rounded-2xl shadow p-4">
+                <div className="bg-white rounded-2xl shadow p-4 relative">
                     <h2 className="text-sm font-semibold text-[#0f0f0f] mb-3">Featured Products</h2>
-                    <div className="flex gap-3 overflow-x-auto pb-1">
+
+                    {/* Left Arrow - Half Circle */}
+                    <button
+                        onClick={() => scrollProducts('left')}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg transition-all duration-300 ease-in opacity-0 hover:opacity-100 flex items-center justify-end pr-2"
+                        style={{
+                            color: PRIMARY,
+                            width: '48px',
+                            height: '80px',
+                            borderTopRightRadius: '40px',
+                            borderBottomRightRadius: '40px'
+                        }}
+                    >
+                        <ChevronLeft size={28} strokeWidth={2.5} />
+                    </button>
+
+                    {/* Right Arrow - Half Circle */}
+                    <button
+                        onClick={() => scrollProducts('right')}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg transition-all duration-300 ease-in opacity-0 hover:opacity-100 flex items-center justify-start pl-2"
+                        style={{
+                            color: PRIMARY,
+                            width: '48px',
+                            height: '80px',
+                            borderTopLeftRadius: '40px',
+                            borderBottomLeftRadius: '40px'
+                        }}
+                    >
+                        <ChevronRight size={28} strokeWidth={2.5} />
+                    </button>
+
+                    <div
+                        id="products-scroll"
+                        className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    >
                         {products.map((p) => (
                             <div
                                 key={p.name}
@@ -313,9 +370,44 @@ export default function Hero() {
                 </div>
 
                 {/* Featured In Learning */}
-                <div className="bg-white rounded-2xl shadow p-4">
+                <div className="bg-white rounded-2xl shadow p-4 relative">
                     <h2 className="text-sm font-semibold text-[#0f0f0f] mb-3">Featured In Learning</h2>
-                    <div className="flex gap-3 overflow-x-auto pb-1">
+
+                    {/* Left Arrow - Half Circle */}
+                    <button
+                        onClick={() => scrollArticles('left')}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg transition-all duration-300 ease-in opacity-0 hover:opacity-100 flex items-center justify-end pr-2"
+                        style={{
+                            color: PRIMARY,
+                            width: '48px',
+                            height: '80px',
+                            borderTopRightRadius: '40px',
+                            borderBottomRightRadius: '40px'
+                        }}
+                    >
+                        <ChevronLeft size={28} strokeWidth={2.5} />
+                    </button>
+
+                    {/* Right Arrow - Half Circle */}
+                    <button
+                        onClick={() => scrollArticles('right')}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg transition-all duration-300 ease-in opacity-0 hover:opacity-100 flex items-center justify-start pl-2"
+                        style={{
+                            color: PRIMARY,
+                            width: '48px',
+                            height: '80px',
+                            borderTopLeftRadius: '40px',
+                            borderBottomLeftRadius: '40px'
+                        }}
+                    >
+                        <ChevronRight size={28} strokeWidth={2.5} />
+                    </button>
+
+                    <div
+                        id="articles-scroll"
+                        className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    >
                         {articles.map((a) => (
                             <a
                                 key={a.title}
