@@ -147,7 +147,7 @@ export default function Hero() {
     useEffect(() => {
         const interval = setInterval(() => {
             nextBanner()
-        }, 5000) // 1 second
+        }, 5000)
 
         return () => clearInterval(interval)
     }, [])
