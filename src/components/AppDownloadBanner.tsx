@@ -1,92 +1,149 @@
 const PRIMARY = "#E17A6E"
 const SECONDARY = "#4A8C8A"
 
-function StoreBadge({ store }: { store: "google" | "apple" }) {
-    return (
-        <img
-            src={
-                store === "google"
-                    ? "https://yenehealth.com/icons/googleplay.svg"
-                    : "https://yenehealth.com/icons/appstore.svg"
-            }
-            alt={store === "google" ? "Get it on Google Play" : "Download on the App Store"}
-            className="h-[45px] md:h-[50px] w-auto object-contain hover:opacity-90 transition-opacity cursor-pointer"
-        />
-    )
-}
-
 export default function AppDownloadBanner() {
     return (
-        <section className="w-full bg-gradient-to-b from-white via-[#FFE5E5] to-[#E17A6E]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-                {/* Phone mockups */}
-                <div className="relative w-full flex items-center justify-center mb-12 md:mb-16 h-[280px] md:h-[350px]">
-                    {/* Back phone (left) */}
-                    <div className="absolute left-[15%] md:left-[30%] top-0 transform -rotate-12 z-10">
-                        <img
-                            src="https://yenehealth.com/images/back-mobile-home-banner-mob.png"
-                            alt="YeneHealth App Screenshot"
-                            className="w-[140px] md:w-[180px] lg:w-[200px] h-auto object-contain drop-shadow-2xl"
-                        />
-                    </div>
-
-                    {/* Front phone (right) */}
-                    <div className="absolute right-[15%] md:right-[30%] top-8 md:top-12 transform rotate-12 z-20">
-                        <img
-                            src="https://yenehealth.com/images/front-mobile-home-banner-mob1.png"
-                            alt="YeneHealth App Screenshot"
-                            className="w-[140px] md:w-[180px] lg:w-[200px] h-auto object-contain drop-shadow-2xl"
-                        />
-                    </div>
+        <div className="w-full bg-white sm:bg-[#f8f8f8ff] sm:px-4 pt-[100px] ">
+            {/* Desktop banner */}
+            <div
+                className="bg-primary hidden relative w-full md:h-[320px] 3xl:h-[400px] rounded-xl overflow-hidden md:grid md:grid-cols-12 px-[2%] 3xl:px-[4%]"
+                style={{ backgroundColor: PRIMARY }}
+            >
+                {/* App images section */}
+                <div className="w-full relative col-span-7 overflow-hidden">
+                    <img
+                        className="absolute md:top-[-220px] 3xl:top-[-160px] md:right-[130px] 3xl:right-[320px] z-10 md:w-[500px] md:h-[490px]"
+                        src="https://yenehealth.com/images/home-banner-englishu.svg"
+                        alt="yenehealth app english"
+                        loading="eager"
+                    />
+                    <img
+                        className="absolute md:bottom-[-35px] 3xl:bottom-[-15px] md:w-[450.53px] md:max-h-[340px] bg-cover object-cover h-full"
+                        src="	https://yenehealth.com/images/home-banner-amharic0.png"
+                        alt="yenehealth app amharic"
+                        loading="eager"
+                    />
                 </div>
 
-                {/* Content */}
-                <div className="text-center flex flex-col items-center gap-6 md:gap-8">
-                    {/* Heading */}
-                    <h2 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
-                        Download our all new
-                        <br />
-                        Yenehealth app
-                    </h2>
-
-                    {/* App store badges */}
-                    <div className="flex items-center justify-center gap-4 md:gap-6">
+                {/* Text and badges section */}
+                <div className="w-full flex flex-col items-center justify-center gap-8 col-start-8 col-end-13">
+                    <h3 className="text-center text-white opacity-80 md:text-3xl 3xl:text-5xl font-bold w-full leading-tight break-words">
+                        Download our all new<br />Yenehealth app
+                    </h3>
+                    <div className="max-w-[289.09px] w-full h-[38.03px] opacity-80 justify-start items-start gap-[26px] inline-flex">
                         <a
-                            href="https://play.google.com/store/apps/details?id=com.yenehealth.app&hl=am&gl=US"
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label="Download Yenehealth app from the Play Store"
+                            aria-label="Download Yenehealth app from the play Store"
+                            href="https://play.google.com/store/apps/details?id=com.yenehealth.app&hl=am&gl=US"
                         >
-                            <StoreBadge store="google" />
+                            <img src="https://yenehealth.com/icons/googleplay.svg" alt="Google play store" className="w-[105.17px] h-[30.42px] relative" />
                         </a>
-
                         <a
                             href="https://apps.apple.com/tr/app/yenehealth/id1673152108"
+                            className="max-w-[131.64px] w-full h-[38.03px] relative"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Download Yenehealth app from the App Store"
                         >
-                            <StoreBadge store="apple" />
-                        </a>
-                    </div>
-
-                    {/* Help section */}
-                    <div className="mt-8 md:mt-12 flex flex-col items-center gap-4">
-                        <p className="text-white/90 text-lg md:text-xl font-medium">
-                            Help make our app better
-                        </p>
-
-                        <a
-                            href="/connect-with-us"
-                            aria-label="Learn more about Yenehealth"
-                            className="px-8 py-3 rounded-lg text-white font-semibold text-base md:text-lg transition-all hover:scale-105 hover:shadow-lg"
-                            style={{ backgroundColor: SECONDARY }}
-                        >
-                            Learn More
+                            <img src="https://yenehealth.com/icons/appstore.svg" alt="App store" className="w-[105.17px] h-[30.42px] relative" />
                         </a>
                     </div>
                 </div>
             </div>
-        </section>
+
+            {/* Mobile banner + help section */}
+            <div
+                className="md:hidden border-b border-[#E28075]"
+                style={{
+                    background: `
+        linear-gradient(
+            180deg,
+            #fff 0%,
+            #fff 20%,
+            rgba(226,128,117,0.25) 25%,
+            rgba(226,128,117,0.65) 45%,
+            rgba(226,128,117,1) 70%,
+            rgba(226,128,117,0.95) 85%,
+            rgba(226,128,117,0.4) 95%,
+            #fff 100%
+        )
+    `,
+                }}
+            >
+                {/* Mobile banner */}
+                <div id="home-banner" className="w-full h-[500px]">
+                    <div className="w-full relative h-full flex justify-center">
+                        <img
+                            src="https://yenehealth.com/images/front-mobile-home-banner-mob1.png"
+                            className="absolute sm:left-[38%] xs:left-[30%] z-10 top-0 w-[230px] h-[350px]"
+                            alt="yene health app"
+                            style={{ transform: 'scale(1.1)' }}
+                        />
+
+                        <img
+                            src="https://yenehealth.com/images/back-mobile-home-banner-mob.png"
+                            className="absolute w-[204px] h-[244px] top-[95px] left-[2%]"
+                            alt="yene health app"
+                        />
+
+                        <div className="absolute bottom-2 flex flex-col gap-3 justify-center items-center">
+                            <h3 className="text-center text-white text-xl font-bold leading-relaxed break-words">
+                                Download our all new
+                                <br />
+                                Yenehealth app
+                            </h3>
+
+                            <div className="w-[274.09px] h-[38.03px] justify-start items-start gap-[11px] inline-flex">
+                                <a
+                                    href="https://play.google.com/store/apps/details?id=com.yenehealth.app&hl=am&gl=US"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <img
+                                        src="https://yenehealth.com/icons/googleplay.svg"
+                                        alt="Google play store"
+                                    />
+                                </a>
+
+                                <a
+                                    href="https://apps.apple.com/tr/app/yenehealth/id1673152108"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <img
+                                        src="https://yenehealth.com/icons/appstore.svg"
+                                        alt="App store"
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Mobile help section */}
+                <div className="w-full h-[189px] px-[73px] mt-[-10px]  flex-col justify-center items-center gap-[11px] flex">
+                    <div className="text-center text-white text-xl font-normal leading-relaxed">
+                        Help make our app better
+                    </div>
+
+                    <a
+                        aria-label="Learn more about Yenehealth"
+                        className="max-w-[151px] w-full h-12 px-8 py-2.5 rounded justify-center items-center gap-2.5 inline-flex"
+                        style={{ backgroundColor: SECONDARY }}
+                        href="/about-us"
+                    >
+                        <span className="sr-only">Learn more about Yenehealth</span>
+
+                        <button
+                            type="button"
+                            className="text-center text-white text-base font-medium leading-[18px] whitespace-nowrap"
+                        >
+                            Learn More
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
     )
 }

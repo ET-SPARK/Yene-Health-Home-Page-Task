@@ -153,3 +153,20 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* App Download Banner Gradients */
+.gradient-bg {
+  background: linear-gradient(180deg, #ffffff 0%, #FFE5E5 20%, #FFB8B8 50%, #E17A6E 100%);
+}
+
+.gradient-banner-bg {
+  background: linear-gradient(180deg, #E17A6E 0%, #E17A6E 60%, #FFE5E5 100%);
+}
+
+.bg-primary {
+  background-color: #E17A6E;
+}
+
+.bg-secondary {
+  background-color: #4A8C8A;
+}

@@ -177,7 +177,7 @@ export default function Hero() {
     const current = banners[activeBanner]
 
     return (
-        <section className="w-full grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 px-2 sm:px-4 py-3 sm:py-4 bg-[#f8f8f8ff]">
+        <section className="w-full grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 px-2 sm:px-4 py-3 sm:py-4 bg-white sm:bg-[#f8f8f8ff]">
 
             {/* ── LEFT: Banner Carousel + Quick Links ── */}
             <div className="lg:col-span-5 flex flex-col gap-3 sm:gap-4">
