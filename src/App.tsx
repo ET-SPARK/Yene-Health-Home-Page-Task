@@ -2,6 +2,7 @@ import AppDownloadBanner from "./components/AppDownloadBanner"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 import Hero from "./components/Hero"
+import FloatingDoctorButton from "./components/FloatingDoctorButton"
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Hero />
       <AppDownloadBanner />
       <Footer />
+      <FloatingDoctorButton />
     </>
   )
 }

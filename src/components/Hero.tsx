@@ -139,94 +139,99 @@ const articles: Article[] = [
 
 export default function Hero() {
     const [activeBanner, setActiveBanner] = useState(0)
+    const [isMobile, setIsMobile] = useState(false)
 
     const nextBanner = () => setActiveBanner((i) => (i + 1) % banners.length)
     const prevBanner = () => setActiveBanner((i) => (i - 1 + banners.length) % banners.length)
 
-    // Auto-cycle banners every 1 second
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener("resize", checkMobile)
+        return () => window.removeEventListener("resize", checkMobile)
+    }, [])
+
     useEffect(() => {
         const interval = setInterval(() => {
             nextBanner()
         }, 5000)
-
         return () => clearInterval(interval)
     }, [])
 
-    const scrollProducts = (direction: 'left' | 'right') => {
-        const container = document.getElementById('products-scroll')
+    const scrollProducts = (direction: "left" | "right") => {
+        const container = document.getElementById("products-scroll")
         if (container) {
-            const scrollAmount = 200
-            container.scrollBy({
-                left: direction === 'left' ? -scrollAmount : scrollAmount,
-                behavior: 'smooth'
-            })
+            const scrollAmount = isMobile ? 160 : 200
+            container.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" })
         }
     }
 
-    const scrollArticles = (direction: 'left' | 'right') => {
-        const container = document.getElementById('articles-scroll')
+    const scrollArticles = (direction: "left" | "right") => {
+        const container = document.getElementById("articles-scroll")
         if (container) {
-            const scrollAmount = 280
-            container.scrollBy({
-                left: direction === 'left' ? -scrollAmount : scrollAmount,
-                behavior: 'smooth'
-            })
+            const scrollAmount = isMobile ? 220 : 280
+            container.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" })
         }
     }
 
     const current = banners[activeBanner]
 
     return (
-        <section className="w-full grid md:grid-cols-12 gap-4 px-2 md:px-4 py-4 bg-[#f8f8f8ff]">
-            {/* Left: banner carousel + quick links */}
-            <div className="md:col-span-5 flex flex-col gap-4">
+        <section className="w-full grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 px-2 sm:px-4 py-3 sm:py-4 bg-[#f8f8f8ff]">
+
+            {/* ── LEFT: Banner Carousel + Quick Links ── */}
+            <div className="lg:col-span-5 flex flex-col gap-3 sm:gap-4">
+
+                {/* Banner */}
                 <div
-                    className="relative w-full rounded-2xl shadow overflow-hidden h-[80vh] flex flex-col justify-between p-8 bg-cover bg-center"
+                    className="relative w-full rounded-2xl shadow overflow-hidden border border-gray-200"
                     style={{
-                        backgroundImage: `url(${current.image})`,
+                        height: isMobile ? 'auto' : '80vh',
+                        minHeight: isMobile ? '300px' : '400px',
+                        maxHeight: isMobile ? '500px' : '800px',
+                        aspectRatio: isMobile ? '3/4' : undefined,
                     }}
                 >
-
+                    <img
+                        src={current.image}
+                        alt={current.title}
+                        className="w-full h-full object-cover"
+                    />
 
                     {/* Dots */}
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-3">
                         {banners.map((b, i) => (
                             <button
                                 key={b.title}
                                 type="button"
                                 aria-label={`Go to ${b.title}`}
                                 onClick={() => setActiveBanner(i)}
-                                className="h-[16px] rounded-full transition-all duration-300"
+                                className="h-[14px] sm:h-[20px] rounded-full transition-all duration-300"
                                 style={{
-                                    width: i === activeBanner ? 48 : 24,
-                                    backgroundColor: i === activeBanner ? SECONDARY : "#ffffffaa",
+                                    width: i === activeBanner
+                                        ? (isMobile ? 40 : 56)
+                                        : (isMobile ? 20 : 28),
+                                    backgroundColor:
+                                        i === activeBanner ? SECONDARY : "#646161aa",
                                 }}
                             />
                         ))}
                     </div>
                 </div>
 
-                {/* Quick link pills */}
-                <div className="grid grid-cols-4 gap-2">
+                {/* Quick-link pills */}
+                <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
                     {banners.map((b, i) => (
                         <button
                             key={b.title}
                             type="button"
                             onClick={() => setActiveBanner(i)}
                             title={b.title}
-                            className="rounded-xl px-2 py-2 text-xs font-semibold border truncate transition-all duration-200"
+                            className="rounded-xl px-1.5 sm:px-2 py-1.5 sm:py-2 text-[10px] sm:text-xs font-semibold border truncate transition-all duration-200"
                             style={
                                 i === activeBanner
-                                    ? {
-                                        backgroundColor: SECONDARY,
-                                        color: "#fff",
-                                        borderColor: SECONDARY,
-                                    }
-                                    : {
-                                        backgroundColor: "transparent",
-                                        color: SECONDARY,
-                                        borderColor: SECONDARY,
-                                    }
+                                    ? { backgroundColor: SECONDARY, color: "#fff", borderColor: SECONDARY }
+                                    : { backgroundColor: "transparent", color: SECONDARY, borderColor: SECONDARY }
                             }
                             onMouseEnter={(e) => {
                                 if (i !== activeBanner) {
@@ -249,118 +254,142 @@ export default function Hero() {
                 </div>
             </div>
 
-            {/* Right: featured products + featured learning */}
-            <div className="md:col-span-7 flex flex-col gap-4">
-                {/* Featured Products */}
-                <div className="bg-white rounded-2xl shadow p-4 relative">
-                    <h2 className="text-sm font-semibold text-[#0f0f0f] mb-3">Featured Products</h2>
+            {/* ── RIGHT: Featured Products + Featured Learning ── */}
+            <div className="lg:col-span-7 flex flex-col gap-3 sm:gap-4">
 
-                    {/* Left Arrow - Half Circle */}
-                    <button
-                        onClick={() => scrollProducts('left')}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg transition-all duration-300 ease-in opacity-0 hover:opacity-100 flex items-center justify-end pr-2"
-                        style={{
-                            color: PRIMARY,
-                            width: '48px',
-                            height: '80px',
-                            borderTopRightRadius: '40px',
-                            borderBottomRightRadius: '40px'
-                        }}
-                    >
-                        <ChevronLeft size={28} strokeWidth={2.5} />
-                    </button>
+                {/* ── Featured Products ── */}
+                <div className="bg-white rounded-2xl shadow p-3 sm:p-4 relative group/products">
+                    <h2 className="text-xs sm:text-sm font-semibold text-[#0f0f0f] mb-2 sm:mb-3">
+                        Featured Products
+                    </h2>
 
-                    {/* Right Arrow - Half Circle */}
-                    <button
-                        onClick={() => scrollProducts('right')}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg transition-all duration-300 ease-in opacity-0 hover:opacity-100 flex items-center justify-start pl-2"
-                        style={{
-                            color: PRIMARY,
-                            width: '48px',
-                            height: '80px',
-                            borderTopLeftRadius: '40px',
-                            borderBottomLeftRadius: '40px'
-                        }}
-                    >
-                        <ChevronRight size={28} strokeWidth={2.5} />
-                    </button>
+                    {/* Left arrow - shows on hover over left side */}
+                    <div className="absolute left-0 top-0 bottom-0 w-16 z-10 cursor-pointer group/left">
+                        <button
+                            onClick={() => scrollProducts("left")}
+                            aria-label="Scroll products left"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-50 shadow-lg
+                                       transition-all duration-300 ease-in
+                                       opacity-0 group-hover/left:opacity-100
+                                       flex items-center justify-end pr-2"
+                            style={{
+                                color: SECONDARY,
+                                width: 40,
+                                height: 70,
+                                borderTopRightRadius: 40,
+                                borderBottomRightRadius: 40,
+                            }}
+                        >
+                            <ChevronLeft size={22} strokeWidth={2.5} />
+                        </button>
+                    </div>
+
+                    {/* Right arrow - shows on hover over right side */}
+                    <div className="absolute right-0 top-0 bottom-0 w-16 z-10 cursor-pointer group/right">
+                        <button
+                            onClick={() => scrollProducts("right")}
+                            aria-label="Scroll products right"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-50 shadow-lg
+                                       transition-all duration-300 ease-in
+                                       opacity-0 group-hover/right:opacity-100
+                                       flex items-center justify-start pl-2"
+                            style={{
+                                color: SECONDARY,
+                                width: 40,
+                                height: 70,
+                                borderTopLeftRadius: 40,
+                                borderBottomLeftRadius: 40,
+                            }}
+                        >
+                            <ChevronRight size={22} strokeWidth={2.5} />
+                        </button>
+                    </div>
 
                     <div
                         id="products-scroll"
-                        className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide"
-                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                        className="flex gap-2 sm:gap-3 overflow-x-auto pb-1"
+                        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                     >
                         {products.map((p) => (
                             <div
                                 key={p.name}
-                                className="group flex-shrink-0 w-[170px] bg-white rounded-2xl border border-gray-100 hover:border-transparent hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden flex flex-col transition-all"
+                                className="group flex-shrink-0 bg-white rounded-2xl border border-gray-100
+                                           hover:border-transparent hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]
+                                           overflow-hidden flex flex-col transition-all
+                                           w-[140px] sm:w-[155px] md:w-[165px] lg:w-[150px] xl:w-[170px]"
                             >
+                                {/* Image */}
                                 <div className="relative aspect-square overflow-hidden">
                                     <div
                                         className="w-full h-full bg-cover bg-center bg-no-repeat"
-                                        style={{
-                                            backgroundImage: `url(${p.image})`,
-                                        }}
+                                        style={{ backgroundImage: `url(${p.image})` }}
                                     />
-
                                     {p.discount && (
                                         <span
-                                            className="absolute top-2 left-2 z-10 text-[9px] font-bold uppercase tracking-wide text-white px-2 py-1 rounded-md"
+                                            className="absolute top-1.5 left-1.5 z-10 text-[8px] sm:text-[9px] font-bold
+                                                       uppercase tracking-wide text-white px-1.5 py-0.5 rounded-md"
                                             style={{ backgroundColor: SECONDARY }}
                                         >
                                             {p.discount}
                                         </span>
                                     )}
-
+                                    {/* Quick View */}
                                     <div className="absolute bottom-2 left-1/2 -translate-x-1/2 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
                                         <button
                                             type="button"
-                                            className="bg-white/90 text-gray-800 text-[9px] font-bold px-3 py-1.5 rounded-full shadow flex items-center gap-1 hover:text-white"
-                                            style={{ ["--hover-bg" as any]: SECONDARY }}
-                                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = SECONDARY)}
+                                            className="bg-white/90 text-gray-800 hover:text-white text-[8px] sm:text-[9px] font-bold
+                   px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow
+                   flex items-center gap-1 whitespace-nowrap"
+                                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
                                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "")}
                                         >
-                                            <Eye size={12} />
+                                            <Eye size={10} />
                                             Quick View
                                         </button>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col flex-grow p-2.5">
+                                {/* Info */}
+                                <div className="flex flex-col flex-grow p-2 sm:p-2.5">
                                     <a
                                         href={p.href}
-                                        className="text-[9px] text-gray-400 font-medium uppercase tracking-wide truncate block mb-0.5"
+                                        className="text-[8px] sm:text-[9px] text-gray-400 font-medium uppercase tracking-wide truncate block mb-0.5"
                                     >
                                         {p.category}
                                     </a>
                                     <a href={p.href} className="block mb-1">
-                                        <h3 className="text-xs font-bold text-gray-800 line-clamp-2 min-h-[28px] leading-snug">
+                                        <h3 className="text-[10px] sm:text-xs font-bold text-gray-800 line-clamp-2 min-h-[24px] sm:min-h-[28px] leading-snug">
                                             {p.name}
                                         </h3>
                                     </a>
-                                    <div className="flex items-baseline gap-1.5 mt-auto mb-1.5">
-                                        <span className="text-sm font-bold text-gray-900">
-                                            {p.price} <span className="text-[10px] font-normal text-gray-500">ETB</span>
+                                    <div className="flex items-baseline gap-1 sm:gap-1.5 mt-auto mb-1 sm:mb-1.5">
+                                        <span className="text-xs sm:text-sm font-bold text-gray-900">
+                                            {p.price}{" "}
+                                            <span className="text-[9px] sm:text-[10px] font-normal text-gray-500">ETB</span>
                                         </span>
                                         {p.oldPrice && (
-                                            <span className="text-[10px] text-gray-400 line-through">{p.oldPrice}</span>
+                                            <span className="text-[9px] sm:text-[10px] text-gray-400 line-through">
+                                                {p.oldPrice}
+                                            </span>
                                         )}
                                     </div>
-                                    <div className="flex gap-2 h-8">
+                                    <div className="flex gap-1.5 sm:gap-2 h-7 sm:h-8">
                                         <button
                                             type="button"
                                             aria-label="Add to wishlist"
-                                            className="w-9 flex-shrink-0 rounded-lg border border-gray-200 flex items-center justify-center hover:border-[#ED887C] transition-colors"
+                                            className="w-7 sm:w-9 flex-shrink-0 rounded-lg border border-gray-200 flex items-center justify-center hover:border-[#ED887C] transition-colors"
                                         >
-                                            <Heart size={14} className="text-gray-400" />
+                                            <Heart size={12} className="text-gray-400" />
                                         </button>
                                         <button
                                             type="button"
-                                            className="flex-grow rounded-lg flex items-center justify-center gap-1.5 font-semibold text-[10px] text-white transition-colors"
+                                            className="flex-grow rounded-lg flex items-center justify-center gap-1 sm:gap-1.5
+                                                       font-semibold text-[9px] sm:text-[10px] text-white transition-colors"
                                             style={{ backgroundColor: PRIMARY }}
                                         >
-                                            <ShoppingCart size={12} />
-                                            Add to Cart
+                                            <ShoppingCart size={10} />
+                                            <span className="hidden xs:inline">Add to Cart</span>
+                                            <span className="xs:hidden">Add</span>
                                         </button>
                                     </div>
                                 </div>
@@ -369,68 +398,95 @@ export default function Hero() {
                     </div>
                 </div>
 
-                {/* Featured In Learning */}
-                <div className="bg-white rounded-2xl shadow p-4 relative">
-                    <h2 className="text-sm font-semibold text-[#0f0f0f] mb-3">Featured In Learning</h2>
+                {/* ── Featured In Learning ── */}
+                <div className="bg-white rounded-2xl shadow p-3 sm:p-4 relative group/articles">
+                    <h2 className="text-xs sm:text-sm font-semibold text-[#0f0f0f] mb-2 sm:mb-3">
+                        Featured In Learning
+                    </h2>
 
-                    {/* Left Arrow - Half Circle */}
-                    <button
-                        onClick={() => scrollArticles('left')}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg transition-all duration-300 ease-in opacity-0 hover:opacity-100 flex items-center justify-end pr-2"
-                        style={{
-                            color: PRIMARY,
-                            width: '48px',
-                            height: '80px',
-                            borderTopRightRadius: '40px',
-                            borderBottomRightRadius: '40px'
-                        }}
-                    >
-                        <ChevronLeft size={28} strokeWidth={2.5} />
-                    </button>
+                    {/* Left arrow - shows on hover over left side */}
+                    <div className="absolute left-0 top-0 bottom-0 w-16 z-10 cursor-pointer group/left">
+                        <button
+                            onClick={() => scrollArticles("left")}
+                            aria-label="Scroll articles left"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-50 shadow-lg
+                                       transition-all duration-300 ease-in
+                                       opacity-0 group-hover/left:opacity-100
+                                       flex items-center justify-end pr-2"
+                            style={{
+                                color: PRIMARY,
+                                width: 40,
+                                height: 70,
+                                borderTopRightRadius: 40,
+                                borderBottomRightRadius: 40,
+                            }}
+                        >
+                            <ChevronLeft size={22} strokeWidth={2.5} />
+                        </button>
+                    </div>
 
-                    {/* Right Arrow - Half Circle */}
-                    <button
-                        onClick={() => scrollArticles('right')}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg transition-all duration-300 ease-in opacity-0 hover:opacity-100 flex items-center justify-start pl-2"
-                        style={{
-                            color: PRIMARY,
-                            width: '48px',
-                            height: '80px',
-                            borderTopLeftRadius: '40px',
-                            borderBottomLeftRadius: '40px'
-                        }}
-                    >
-                        <ChevronRight size={28} strokeWidth={2.5} />
-                    </button>
+                    {/* Right arrow - shows on hover over right side */}
+                    <div className="absolute right-0 top-0 bottom-0 w-16 z-10 cursor-pointer group/right">
+                        <button
+                            onClick={() => scrollArticles("right")}
+                            aria-label="Scroll articles right"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-50 shadow-lg
+                                       transition-all duration-300 ease-in
+                                       opacity-0 group-hover/right:opacity-100
+                                       flex items-center justify-start pl-2"
+                            style={{
+                                color: PRIMARY,
+                                width: 40,
+                                height: 70,
+                                borderTopLeftRadius: 40,
+                                borderBottomLeftRadius: 40,
+                            }}
+                        >
+                            <ChevronRight size={22} strokeWidth={2.5} />
+                        </button>
+                    </div>
 
                     <div
                         id="articles-scroll"
-                        className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide"
-                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                        className="flex gap-2 sm:gap-3 overflow-x-auto pb-1"
+                        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                     >
                         {articles.map((a) => (
                             <a
                                 key={a.title}
                                 href={a.href}
-                                className="flex-shrink-0 w-[260px] rounded-xl border overflow-hidden hover:shadow-md transition-shadow"
+                                className="flex-shrink-0 rounded-xl border overflow-hidden hover:shadow-md transition-shadow relative
+                                           w-[200px] sm:w-[230px] md:w-[250px] lg:w-[230px] xl:w-[260px]
+                                           h-[180px] sm:h-[200px] md:h-[220px]"
                                 style={{ borderColor: SECONDARY }}
                             >
+                                {/* Full card background image */}
                                 <div
-                                    className="h-32 w-full bg-cover bg-center bg-no-repeat"
+                                    className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+                                    style={{ backgroundImage: `url(${a.image})` }}
+                                />
+
+                                {/* White gradient overlay fading from bottom to middle */}
+                                <div
+                                    className="absolute inset-0"
                                     style={{
-                                        backgroundImage: `url(${a.image})`,
+                                        background: 'linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0.4) 50%, transparent 70%)'
                                     }}
                                 />
-                                <div className="p-3">
-                                    <h3 className="text-sm font-semibold text-[#1d2a38] leading-snug line-clamp-2 mb-1">
+
+                                {/* Content overlay */}
+                                <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
+                                    <h3 className="text-[11px] sm:text-sm font-semibold text-[#1d2a38] leading-snug line-clamp-2 mb-1">
                                         {a.title}
                                     </h3>
-                                    <p className="text-xs text-[#7d879c] line-clamp-2">
-                                        {a.excerpt}{" "}
-                                        <span className="underline" style={{ color: SECONDARY }}>
+                                    <div className="text-[10px] sm:text-xs text-[#7d879c]">
+                                        <span className="line-clamp-2 inline">
+                                            {a.excerpt.length > 80 ? a.excerpt.substring(0, 80) + '... ' : a.excerpt + ' '}
+                                        </span>
+                                        <span className="underline inline" style={{ color: SECONDARY }}>
                                             Read more
                                         </span>
-                                    </p>
+                                    </div>
                                 </div>
                             </a>
                         ))}
