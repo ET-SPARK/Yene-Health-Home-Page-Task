@@ -328,7 +328,7 @@ export default function Hero() {
                                         <span
                                             className="absolute top-1.5 left-1.5 z-10 text-[8px] sm:text-[9px] font-bold
                                                        uppercase tracking-wide text-white px-1.5 py-0.5 rounded-md"
-                                            style={{ backgroundColor: SECONDARY }}
+                                            style={{ backgroundColor: PRIMARY }}
                                         >
                                             {p.discount}
                                         </span>
