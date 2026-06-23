@@ -3,7 +3,7 @@ const SECONDARY = "#4A8C8A"
 
 export default function AppDownloadBanner() {
     return (
-        <div className="w-full bg-white sm:bg-[#f8f8f8ff] sm:px-4 pt-[100px] ">
+        <div className="w-full bg-white sm:bg-[#f8f8f8ff]  pt-[100px] ">
             {/* Desktop banner */}
             <div
                 className="bg-primary hidden relative w-full md:h-[320px] 3xl:h-[400px] rounded-xl overflow-hidden md:grid md:grid-cols-12 px-[2%] 3xl:px-[4%]"
@@ -52,21 +52,44 @@ export default function AppDownloadBanner() {
                 </div>
             </div>
 
+
+
+            {/* Desktop help bar */}
+            <div
+                className="hidden md:flex w-full h-[50px] items-center justify-center gap-10 mt-10"
+                style={{ backgroundColor: SECONDARY }}
+            >
+                <span className="text-white/80 text-[18px] font-light">
+                    Help make our app better
+                </span>
+
+                <a
+                    href="/about-us"
+                    className="px-5 h-8 rounded flex items-center justify-center"
+                    style={{ backgroundColor: PRIMARY }}
+                >
+                    <span className="text-white text-sm font-semibold whitespace-nowrap">
+                        Learn More
+                    </span>
+                </a>
+            </div>
+
+
             {/* Mobile banner + help section */}
             <div
-                className="md:hidden border-b border-[#E28075]"
+                className="md:hidden"
                 style={{
                     background: `
         linear-gradient(
             180deg,
-            #fff 0%,
-            #fff 20%,
+            #f3f4f6 0%,
+            #f3f4f6 20%,
             rgba(226,128,117,0.25) 25%,
             rgba(226,128,117,0.65) 45%,
             rgba(226,128,117,1) 70%,
             rgba(226,128,117,0.95) 85%,
             rgba(226,128,117,0.4) 95%,
-            #fff 100%
+            #f3f4f6 100%
         )
     `,
                 }}
@@ -144,6 +167,6 @@ export default function AppDownloadBanner() {
                     </a>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

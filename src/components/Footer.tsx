@@ -1,10 +1,9 @@
 "use client"
 
-import { useState, FormEvent } from "react"
-import { ArrowRight, Send, Phone, Mail } from "lucide-react"
+import { useState, useEffect, type FormEvent } from "react"
+import { ArrowRight, Send, ArrowUp } from "lucide-react"
 
 const PRIMARY = "#E17A6E"
-const SECONDARY = "#e1d1cfff"
 const TEAL_SOCIAL = "#489497"
 
 
@@ -104,6 +103,8 @@ const footerColumns = [
 export default function Footer() {
     const [email, setEmail] = useState("")
     const [submitted, setSubmitted] = useState(false)
+    const [isAtFooter, setIsAtFooter] = useState(false)
+    const [showScrollButton, setShowScrollButton] = useState(true)
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
@@ -113,52 +114,102 @@ export default function Footer() {
         setEmail("")
     }
 
+    const handleScrollToTop = () => {
+        setShowScrollButton(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+
+        // Show button again after a delay (when user scrolls down again)
+        setTimeout(() => {
+            setShowScrollButton(true)
+        }, 1000)
+    }
+
+    // Handle scroll to detect when footer is visible
+    useEffect(() => {
+        const handleScroll = () => {
+            const footer = document.getElementById('footer-section')
+            if (!footer) return
+
+            const footerRect = footer.getBoundingClientRect()
+            const windowHeight = window.innerHeight
+
+            // Check if footer is visible in viewport (at least 100px into view)
+            setIsAtFooter(footerRect.top <= windowHeight - 100)
+
+            // Show button when scrolled down, hide when at top
+            if (window.scrollY > 300) {
+                setShowScrollButton(true)
+            } else {
+                setShowScrollButton(false)
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll)
+        handleScroll() // Check initial state
+
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
     return (
-        <footer className="mt-auto w-full bg-[#f8f8f8ff]">
-            <div className="bg-[#f2f3f5] md:bg-transparent">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-6 px-[30px] md:px-[75px] py-10 items-start">
-                    {/* Col 1: Newsletter */}
-                    <div className="flex flex-col gap-4 md:bg-white md:p-[18px] rounded-[14px] w-full">
-                        <div className="text-gray-800 text-xl md:text-xl font-semibold leading-snug text-center md:text-left">
+        <footer id="footer-section" className="mt-auto w-full bg-white relative">
+            {/* Scroll to Top Button - Sticky/Fixed */}
+            {showScrollButton && (
+                <button
+                    onClick={handleScrollToTop}
+                    className={`flex w-12 h-12 rounded-full items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 z-50 shadow-lg ${isAtFooter ? 'absolute bottom-16 right-4 md:right-8' : 'fixed bottom-8 right-4 md:right-8'
+                        }`}
+                    style={{ backgroundColor: PRIMARY }}
+                    aria-label="Scroll to top"
+                    title="Scroll to top"
+                >
+                    <ArrowUp size={22} className="text-white" />
+                </button>
+            )}
+            {/* Desktop Layout */}
+            <div className="hidden md:block">
+                <div className="grid grid-cols-3 gap-8 px-[75px] py-12 bg-[#f8f8f8]">
+                    {/* Newsletter Section */}
+                    <div className="flex flex-col gap-4 bg-white p-6 rounded-[14px]">
+                        <h3 className="text-gray-800 text-sm font-semibold leading-snug">
                             Stay informed, Get exclusive updates
-                        </div>
-                        <p className="text-center md:text-left text-[#7d879c] text-xs md:text-sm">
+                        </h3>
+                        <p className="text-[#7d879c] text-xs">
                             Join 60,000+ Subscribers and get a new discount coupon on every week.
                         </p>
 
                         <form onSubmit={handleSubmit} className="w-full">
-                            <div className="flex items-center rounded-full bg-white md:bg-[#F2F2F2] w-full">
+                            <div className="flex items-center rounded-full bg-[#F2F2F2] w-full">
                                 <input
                                     placeholder="Your email address"
                                     type="email"
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="rounded-l-full border-none focus:outline-none h-[50px] bg-white md:bg-[#F2F2F2] flex-1 px-4 min-w-0"
+                                    className="rounded-l-full border-none focus:outline-none h-[50px] bg-[#F2F2F2] flex-1 px-4 min-w-0 text-sm placeholder:text-gray-400"
                                 />
                                 <button
                                     title="Subscribe to our newsletter"
                                     type="submit"
-                                    className="mr-1 text-white py-[3px] h-[48px] px-4 rounded-[30px] flex items-center gap-1 leading-[18px] tracking-wide text-sm font-semibold whitespace-nowrap shrink-0"
-                                    style={{ backgroundColor: PRIMARY }}
+                                    className="mr-1 text-white py-[3px] h-[48px] px-4 rounded-[30px] flex items-center gap-1 leading-[18px] tracking-wide text-xs font-semibold whitespace-nowrap shrink-0"
+                                    style={{ backgroundColor: TEAL_SOCIAL }}
                                 >
-                                    SUBSCRIBE <ArrowRight size={16} />
+                                    SUBSCRIBE <ArrowRight size={14} />
                                 </button>
                             </div>
                             {submitted && (
-                                <p className="text-xs mt-2 text-center md:text-left" style={{ color: PRIMARY }}>
+                                <p className="text-xs mt-2" style={{ color: PRIMARY }}>
                                     Thanks for subscribing!
                                 </p>
                             )}
                         </form>
                     </div>
 
-                    {/* Col 2: Telegram CTA + socials + investors */}
-                    <div className="flex flex-col items-center md:items-start gap-5">
+                    {/* Telegram + Social + Contact Section */}
+                    <div className="flex flex-col gap-4  items-center">
                         <div className="flex gap-2 items-center">
-                            <Send size={24} style={{ color: "#4DA3DD" }} />
+                            <Send size={18} style={{ color: "#4DA3DD" }} />
                             <a
-                                className="text-center md:text-left font-semibold leading-relaxed underline md:no-underline text-sm md:text-base"
+                                className="font-semibold leading-relaxed text-xs"
                                 style={{ color: "#4DA3DD" }}
                                 href="https://t.me/yenehealth"
                                 target="_blank"
@@ -168,7 +219,7 @@ export default function Footer() {
                             </a>
                         </div>
 
-                        <div className="flex gap-3 md:gap-4 justify-center md:justify-start w-full flex-wrap">
+                        <div className="flex gap-4 py-4 flex-wrap justify-center">
                             {socialLinks.map(({ label, href, Icon }) => (
                                 <a
                                     key={label}
@@ -179,73 +230,185 @@ export default function Footer() {
                                     href={href}
                                     className="hover:opacity-75 transition-opacity"
                                 >
-                                    <Icon size={24} color={TEAL_SOCIAL} />
+                                    <Icon size={22} color={PRIMARY} />
                                 </a>
                             ))}
                         </div>
 
-                        <a
-                            title="Go to for investors page"
-                            aria-label="Go to for investors page"
-                            href="/for-investor"
-                            className="hidden md:inline-flex h-7 px-[21px] py-px rounded-3xl flex-col justify-center items-center w-fit"
-                            style={{ backgroundColor: SECONDARY }}
-                        >
-                            <p className="text-white text-sm font-semibold leading-relaxed">For Investors</p>
-                        </a>
-
-                        <div className="md:hidden flex gap-4 items-center">
-                            <a
-                                href="tel:+251906999111"
-                                title="Call YeneHealth"
-                                className="text-sm font-normal leading-[18px]"
-                                style={{ color: SECONDARY }}
-                            >
-                                (+251) 90-699-9111
-                            </a>
-                            <a className="text-slate-500" href="mailto:info@yenehealth.com">
-                                support@yenehealth.com
-                            </a>
-                        </div>
 
                         <a
                             title="Go to for investors page"
                             aria-label="Go to for investors page"
                             href="/for-investor"
-                            className="md:hidden text-sm text-white py-5 rounded-3xl px-2.5 max-w-[102px] w-full h-7 flex items-center justify-center"
+                            className="inline-flex h-8 px-5 rounded-3xl justify-center items-center w-fit text-white text-xs font-semibold"
                             style={{ backgroundColor: PRIMARY }}
                         >
                             For Investors
                         </a>
                     </div>
 
-                    {/* Col 3 + 4: nav links */}
-                    {footerColumns.map((col, i) => (
-                        <nav
-                            key={i}
-                            className="hidden md:flex flex-col gap-3 text-[13px] text-gray-600 uppercase"
-                        >
-                            {col.map((link) => (
+                    {/* Navigation Links - Combined */}
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-xs text-gray-700 uppercase">
+                        <nav className="flex flex-col gap-3">
+                            {footerColumns[0].map((link) => (
                                 <a
                                     key={link.label}
                                     aria-label={link.label}
-                                    className="hover:opacity-80 transition-opacity hover:text-[#2F6B68]"
+                                    className="hover:opacity-80 transition-opacity"
                                     href={link.href}
                                 >
                                     {link.label}
                                 </a>
                             ))}
                         </nav>
-                    ))}
+                        <nav className="flex flex-col gap-3">
+                            {footerColumns[1].map((link) => (
+                                <a
+                                    key={link.label}
+                                    aria-label={link.label}
+                                    className="hover:opacity-80 transition-opacity"
+                                    href={link.href}
+                                >
+                                    {link.label}
+                                </a>
+                            ))}
+                        </nav>
+                    </div>
+                </div>
+
+                {/* Desktop Bottom Bar */}
+                <div
+                    className="w-full h-[45px] flex items-center justify-between text-white text-xs px-[75px]"
+                    style={{ backgroundColor: PRIMARY }}
+                >
+                    {/* Left: Contact Info */}
+                    <div className="flex gap-4 items-center">
+                        <a href="tel:+251906999111" className="hover:opacity-80 transition-opacity">
+                            (+251) 90-699-9111
+                        </a>
+                        <a href="mailto:support@yenehealth.com" className="hover:opacity-80 transition-opacity">
+                            support@yenehealth.com
+                        </a>
+                    </div>
+
+                    {/* Right: Copyright */}
+                    <p className="font-normal">
+                        © 2026 – YeneHealth • All Rights Reserved •{" "}
+                        <a
+                            aria-label="Go to privacy policy page"
+                            title="Go to privacy policy page"
+                            className="hover:underline"
+                            href="/user-dashboard/settings?modal=privacy-policy"
+                        >
+                            Privacy Policy
+                        </a>
+                    </p>
                 </div>
             </div>
 
-            {/* Mobile nav links */}
-            <div className="md:hidden w-full" style={{ backgroundColor: PRIMARY }}>
-                <nav className="grid grid-cols-2 text-[10px] text-white justify-center py-[17px] px-2 uppercase">
-                    {footerColumns.map((col, i) => (
-                        <div key={i} className="grid gap-y-4 justify-center">
-                            {col.map((link) => (
+            {/* Mobile Layout */}
+            <div className="md:hidden">
+                <div className="bg-gray-100 px-6 py-8">
+                    {/* Newsletter Section */}
+                    <div className="flex flex-col gap-4 mb-8 bg-gray-100 p-6">
+                        <h3 className="text-gray-800 text-md font-bold leading-snug text-center">
+                            Stay informed, Get exclusive updates
+                        </h3>
+                        <p className="text-center text-[#7d879c] text-xs">
+                            Join 60,000+ Subscribers and get a new discount coupon on every week.
+                        </p>
+
+                        <form onSubmit={handleSubmit} className="w-full">
+                            <div className="flex items-center rounded-full bg-white w-full">
+                                <input
+                                    placeholder="Your email address"
+                                    type="email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="rounded-l-full border-none focus:outline-none h-[50px] bg-white flex-1 px-4 min-w-0 text-sm placeholder:text-gray-400"
+                                />
+                                <button
+                                    title="Subscribe to our newsletter"
+                                    type="submit"
+                                    className="mr-1 text-white py-[3px] h-[48px] px-4 rounded-[30px] flex items-center gap-1 leading-[18px] tracking-wide text-xs font-semibold whitespace-nowrap shrink-0"
+                                    style={{ backgroundColor: TEAL_SOCIAL }}
+                                >
+                                    SUBSCRIBE <ArrowRight size={14} />
+                                </button>
+                            </div>
+                            {submitted && (
+                                <p className="text-xs mt-2 text-center" style={{ color: PRIMARY }}>
+                                    Thanks for subscribing!
+                                </p>
+                            )}
+                        </form>
+                    </div>
+                </div>
+
+                {/* White background section */}
+                <div className="bg-white px-6 py-8">
+
+                    {/* Telegram Link */}
+                    <div className="flex gap-2  items-center justify-center mb-6">
+                        <Send size={18} style={{ color: "#4DA3DD" }} />
+                        <a
+                            className="font-semibold leading-relaxed text-xs"
+                            style={{ color: "#4DA3DD" }}
+                            href="https://t.me/yenehealth"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Join our telegram channel
+                        </a>
+                    </div>
+
+                    {/* Social Icons */}
+                    <div className="flex gap-4 justify-center mb-6">
+                        {socialLinks.map(({ label, href, Icon }) => (
+                            <a
+                                key={label}
+                                title={label}
+                                aria-label={`Visit YeneHealth on ${label}`}
+                                rel="noopener"
+                                target="_blank"
+                                href={href}
+                                className="hover:opacity-75 transition-opacity"
+                            >
+                                <Icon size={22} color={TEAL_SOCIAL} />
+                            </a>
+                        ))}
+                    </div>
+
+                    {/* Contact Info */}
+                    <div className="flex flex-col gap-3 items-center mb-6">
+                        <a href="tel:+251906999111" className="text-xs" style={{ color: "#4DA3DD" }}>
+                            (+251) 90-699-9111
+                        </a>
+                        <a className="text-xs text-gray-600" href="mailto:support@yenehealth.com">
+                            support@yenehealth.com
+                        </a>
+                    </div>
+
+                    {/* For Investors Button */}
+                    <div className="flex justify-center mb-8">
+                        <a
+                            title="Go to for investors page"
+                            aria-label="Go to for investors page"
+                            href="/for-investor"
+                            className="text-xs text-white py-2.5 rounded-3xl px-8 inline-flex items-center justify-center"
+                            style={{ backgroundColor: PRIMARY }}
+                        >
+                            For Investors
+                        </a>
+                    </div>
+                </div>
+
+                {/* Mobile Navigation Links */}
+                <div className="w-full" style={{ backgroundColor: PRIMARY }}>
+                    <nav className="grid grid-cols-2 gap-x-8 gap-y-4 text-white text-center py-6 px-6 uppercase text-xs">
+                        <div className="flex flex-col gap-4">
+                            {footerColumns[0].map((link) => (
                                 <a
                                     key={link.label}
                                     aria-label={link.label}
@@ -256,47 +419,32 @@ export default function Footer() {
                                 </a>
                             ))}
                         </div>
-                    ))}
-                </nav>
+                        <div className="flex flex-col gap-4">
+                            {footerColumns[1].map((link) => (
+                                <a
+                                    key={link.label}
+                                    aria-label={link.label}
+                                    className="hover:opacity-80 transition-opacity"
+                                    href={link.href}
+                                >
+                                    {link.label}
+                                </a>
+                            ))}
+                        </div>
+                    </nav>
 
-                <div className="text-center text-[10px] text-white pb-3">
-                    © 2026 – YeneHealth • All Rights Reserved •{" "}
-                    <a
-                        title="Privacy Policy"
-                        className="text-[10px] font-normal underline"
-                        href="/user-dashboard/settings?modal=privacy-policy"
-                    >
-                        Privacy Policy
-                    </a>
+                    {/* Mobile Copyright */}
+                    <div className="text-center text-xs text-white pb-4 px-4">
+                        © 2026 – YeneHealth • All Rights Reserved •{" "}
+                        <a
+                            title="Privacy Policy"
+                            className="underline"
+                            href="/user-dashboard/settings?modal=privacy-policy"
+                        >
+                            Privacy Policy
+                        </a>
+                    </div>
                 </div>
-            </div>
-
-            {/* Desktop bottom contact bar */}
-            <div
-                className="w-full h-[40px] hidden md:flex font-normal items-center justify-between text-white text-sm px-[10px] py-[11px] leading-[18px]"
-                style={{ backgroundColor: PRIMARY }}
-            >
-                <div className="flex gap-3 items-center">
-                    <a href="tel:+251906999111" className="flex items-center gap-1.5">
-                        <Phone size={14} />
-                        (+251) 90-699-9111
-                    </a>
-                    <a href="mailto:info@yenehealth.com" className="flex items-center gap-1.5">
-                        <Mail size={14} />
-                        support@yenehealth.com
-                    </a>
-                </div>
-                <h4 className="font-normal">
-                    © 2026 – YeneHealth • All Rights Reserved •{" "}
-                    <a
-                        aria-label="Go to privacy policy page"
-                        title="Go to privacy policy page"
-                        className="text-sm font-normal leading-normal hover:underline"
-                        href="/user-dashboard/settings?modal=privacy-policy"
-                    >
-                        Privacy Policy
-                    </a>
-                </h4>
             </div>
         </footer>
     )
