@@ -206,7 +206,7 @@ export default function Hero() {
                                 type="button"
                                 aria-label={`Go to ${b.title}`}
                                 onClick={() => setActiveBanner(i)}
-                                className="h-[14px] sm:h-[20px] rounded-full transition-all duration-300"
+                                className="h-[12px] sm:h-[14px] rounded-full transition-all duration-300"
                                 style={{
                                     width: i === activeBanner
                                         ? (isMobile ? 40 : 56)
@@ -307,7 +307,7 @@ export default function Hero() {
 
                     <div
                         id="products-scroll"
-                        className="flex gap-2 sm:gap-3 overflow-x-auto pb-1"
+                        className="flex gap-2 sm:gap-3 overflow-x-auto pb-1 border-l border-[#3498db] pl-3"
                         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                     >
                         {products.map((p) => (
@@ -414,7 +414,7 @@ export default function Hero() {
                                        opacity-0 group-hover/left:opacity-100
                                        flex items-center justify-end pr-2"
                             style={{
-                                color: PRIMARY,
+                                color: SECONDARY,
                                 width: 40,
                                 height: 70,
                                 borderTopRightRadius: 40,
@@ -435,7 +435,7 @@ export default function Hero() {
                                        opacity-0 group-hover/right:opacity-100
                                        flex items-center justify-start pl-2"
                             style={{
-                                color: PRIMARY,
+                                color: SECONDARY,
                                 width: 40,
                                 height: 70,
                                 borderTopLeftRadius: 40,
@@ -448,45 +448,43 @@ export default function Hero() {
 
                     <div
                         id="articles-scroll"
-                        className="flex gap-2 sm:gap-3 overflow-x-auto pb-1"
+                        className="flex gap-2 sm:gap-3 overflow-x-auto pb-1 border-l border-[#3498db] pl-3"
                         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                     >
                         {articles.map((a) => (
                             <a
                                 key={a.title}
                                 href={a.href}
-                                className="flex-shrink-0 rounded-xl border overflow-hidden hover:shadow-md transition-shadow relative
-                                           w-[200px] sm:w-[230px] md:w-[250px] lg:w-[230px] xl:w-[260px]
-                                           h-[180px] sm:h-[200px] md:h-[220px]"
+                                className="flex-shrink-0 relative border rounded-xl overflow-hidden hover:shadow-md transition-shadow
+                       w-[220px] sm:w-[250px] md:w-[280px] h-[34vh] pb-3"
                                 style={{ borderColor: SECONDARY }}
                             >
-                                {/* Full card background image */}
-                                <div
-                                    className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+                                {/* ── Image — takes most of the card height ── */}
+                                <div className="relative md:h-[22vh] h-[25vh] w-full flex-shrink-0 bg-cover bg-center bg-no-repeat"
                                     style={{ backgroundImage: `url(${a.image})` }}
-                                />
+                                >
+                                    {/* gradient fade at bottom of image */}
+                                    <div className="absolute bottom-0 w-full h-20 bg-gradient-to-t from-white to-transparent" />
 
-                                {/* White gradient overlay fading from bottom to middle */}
-                                <div
-                                    className="absolute inset-0"
-                                    style={{
-                                        background: 'linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0.4) 50%, transparent 70%)'
-                                    }}
-                                />
-
-                                {/* Content overlay */}
-                                <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
-                                    <h3 className="text-[11px] sm:text-sm font-semibold text-[#1d2a38] leading-snug line-clamp-2 mb-1">
+                                    {/* Title overlaid on image */}
+                                    <h3 className="absolute bottom-1 z-20 pl-[10px] pr-2 text-[#1d2a38] text-[13px] sm:text-[14px] font-semibold leading-snug line-clamp-2">
                                         {a.title}
                                     </h3>
-                                    <div className="text-[10px] sm:text-xs text-[#7d879c]">
-                                        <span className="line-clamp-2 inline">
-                                            {a.excerpt.length > 80 ? a.excerpt.substring(0, 80) + '... ' : a.excerpt + ' '}
-                                        </span>
-                                        <span className="underline inline" style={{ color: SECONDARY }}>
+                                </div>
+
+                                {/* ── Excerpt below image ── */}
+                                <div className="pl-[10px] pr-2 pt-1">
+                                    <p className="text-[11px] sm:text-[12px] text-[#7d879c] font-normal leading-snug line-clamp-2">
+                                        {a.excerpt.length > 60
+                                            ? a.excerpt.substring(0, 60) + "... "
+                                            : a.excerpt + " "}
+                                        <span
+                                            className="underline font-medium"
+                                            style={{ color: SECONDARY }}
+                                        >
                                             Read more
                                         </span>
-                                    </div>
+                                    </p>
                                 </div>
                             </a>
                         ))}
