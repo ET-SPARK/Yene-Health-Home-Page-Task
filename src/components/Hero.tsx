@@ -142,7 +142,6 @@ export default function Hero() {
     const [isMobile, setIsMobile] = useState(false)
 
     const nextBanner = () => setActiveBanner((i) => (i + 1) % banners.length)
-    const prevBanner = () => setActiveBanner((i) => (i - 1 + banners.length) % banners.length)
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768)

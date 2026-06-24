@@ -17,9 +17,6 @@ import { Search, Heart, ShoppingCart, Menu, X, ChevronDown } from "lucide-react"
 import logo from "@/assets/logo.svg"
 
 const PRIMARY = "#e17a6e"
-const SECONDARY = "#e1d1cfff"
-// Muted sage/teal used for the footer link grid inside the open mobile menu
-const MENU_LINK_MUTED = "#9CC4B5"
 
 const mainNavLinks = [
   { label: "Home", href: "/", current: true },
